@@ -12,6 +12,7 @@ Library           RPA.HTTP
 Library           RPA.PDF
 Library           RPA.Archive
 Library           RPA.Robocloud.Secrets
+Library           RPA.Dialogs
 # -
 
 *** Tasks ***
@@ -29,12 +30,21 @@ Order robots from RobotSpareBin Industries Inc
         Embed the robot screenshot to the receipt PDF file    ${screenshot}    ${pdf}
         Go to order another robot
     END
-    Create a ZIP file of the receipts
+    ${zipname}=    Ask Zip File Name to User
+    Create a ZIP file of the receipts    ${zipname}[filename]
 
 *** Keywords ***
 Open the robot order website
     [Arguments]    ${url}
     Open Available Browser    ${url}
+
+*** Keywords ***
+Ask Zip File Name to User
+    Create Form    Question to the user
+    Add Text Input    label=What is the name of your output .zip file?    name=filename
+    &{response}=    Request Response
+    Log    Username is "${response}[filename]"
+    [Return]    &{response}
 
 *** Keywords ***
 Get orders
@@ -99,4 +109,5 @@ Go to order another robot
 
 *** Keywords ***
 Create a ZIP file of the receipts
-    Archive Folder With ZIP    ${OUTPUT_DIR}    ${OUTPUT_DIR}${/}receipts.zip    recursive=True    include=*.pdf    exclude=/.*
+    [Arguments]    ${zipname}
+    Archive Folder With ZIP    ${OUTPUT_DIR}    ${OUTPUT_DIR}${/}${zipname}.zip    recursive=True    include=*.pdf    exclude=/.*
