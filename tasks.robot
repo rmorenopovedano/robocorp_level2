@@ -24,7 +24,7 @@ Order robots from RobotSpareBin Industries Inc
         Close the annoying modal
         Fill the form    ${row}
         Preview the robot
-        Wait Until Keyword Succeeds    3x    1s    Submit the order
+        Wait Until Keyword Succeeds    3x    2s    Submit the order
         ${pdf}=    Store the receipt as a PDF file    ${row}[Order number]
         ${screenshot}=    Take a screenshot of the robot    ${row}[Order number]
         Embed the robot screenshot to the receipt PDF file    ${screenshot}    ${pdf}
@@ -32,6 +32,7 @@ Order robots from RobotSpareBin Industries Inc
     END
     ${zipname}=    Ask Zip File Name to User
     Create a ZIP file of the receipts    ${zipname}[filename]
+    Close Browser
 
 *** Keywords ***
 Open the robot order website
@@ -41,7 +42,7 @@ Open the robot order website
 *** Keywords ***
 Ask Zip File Name to User
     Create Form    Question to the user
-    Add Text Input    label=What is the name of your output .zip file?    name=filename
+    Add Text Input    label=What is the name of your output .zip file?    name=filename    value=
     &{response}=    Request Response
     Log    Username is "${response}[filename]"
     [Return]    &{response}
